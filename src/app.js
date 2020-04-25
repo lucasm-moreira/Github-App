@@ -15,6 +15,10 @@ class App extends Component {
       starred: [],
       isFetching: false
     }
+
+    //É feito essa atribuição no construtor para definir que o this usado pela função handleSearch é o this da classe App. Caso contrário o this será o do elemento que executar a função, nesse caso o componente Search
+    //Uma outra forma de utilizar seria passando da seguinte forma no AppContent "handleSearch={(e) => this.handleSearch(e)}", nesse caso não precisaria atribuir no construtor
+    this.handleSearch = this.handleSearch.bind(this)
   }
 
   //Método para montar as possíveis url para request no github
@@ -72,16 +76,13 @@ class App extends Component {
     }
   }
 
-  //handleSearch recebe arrow function com parâmetro 'e' porque precisa pegar o que está sendo digitado no evento
-  //getRepos e getStarred não tem arrow function e nem recebe o 'e' como parâmetro porque o parâmetro passado é sempre o mesmo, repos ou starred
+  //Para passar o estado é usado o spread operator, dessa forma ele 'espalha' as propriedades do objeto state e é possível passar para os componentes filhos com uma linha de código ao invés de uma para cada propriedade
+  //É possível utilizar em arrays também, dessa forma ele espalha o conteúdo do array e passa cada propriedade isolada. Exemplo: array = [1, 2, 3] / function sum (...array) é igual a function sum(array[0], array[1], array[2])
   render () {
     return (
       <AppContent 
-      userinfo={this.state.userinfo}
-      repos={this.state.repos}
-      starred={this.state.starred}
-      isFetching={this.state.isFetching}
-      handleSearch={(e) => this.handleSearch(e)}
+      {...this.state}
+      handleSearch={this.handleSearch}
       getRepos={this.getRepos('repos')}
       getStarred={this.getRepos('starred')}
       />
